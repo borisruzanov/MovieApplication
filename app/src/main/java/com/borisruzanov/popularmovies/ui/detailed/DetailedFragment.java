@@ -33,6 +33,7 @@ import com.borisruzanov.popularmovies.model.data.api.RetrofitClient;
 import com.borisruzanov.popularmovies.entity.ReviewModel;
 import com.borisruzanov.popularmovies.entity.TrailerModel;
 import com.borisruzanov.popularmovies.udacity.ProviderContract;
+import com.borisruzanov.popularmovies.ui.favouriteList.FavouritesFragment;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -51,18 +52,10 @@ public class DetailedFragment extends MvpAppCompatFragment {
      */
     View view;
     Toolbar toolbar;
-    Button btnAddFavourite;
     Button btnAddProvider;
     DetailedFragment detailedFragment;
     String path = "";
     private String stateValue = "detailed";
-
-    /**
-     * Garbage
-     */
-    // Final Strings to store state information about the list of images and list index
-    public static final String IMAGE_ID_LIST = "image_ids";
-    public static final String LIST_INDEX = "list_index";
 
     /**
      * Reviews
@@ -78,7 +71,6 @@ public class DetailedFragment extends MvpAppCompatFragment {
     List<TrailerModel.Result> trailerList;
     TrailerAdapter trailerAdapter;
 
-
     /**
      * Database
      */
@@ -92,16 +84,9 @@ public class DetailedFragment extends MvpAppCompatFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        view = inflater.inflate(R.layout.fragment_detailed, container, false);
-        btnAddFavourite = view.findViewById(R.id.fr_detailed_btn_favourite);
-        btnAddFavourite.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                addMovieInFavourites();
-            }
-        });
+        Log.d(Contract.TAG_WORK_PROCESS_CHECKING, "DetailedFragment - onCreateView");
 
-        Log.d("tagoc", "In onCreate");
+        view = inflater.inflate(R.layout.fragment_detailed, container, false);
 
         btnAddProvider = view.findViewById(R.id.fr_detailed_btn_provider);
         btnAddProvider.setOnClickListener(new View.OnClickListener() {
@@ -121,7 +106,6 @@ public class DetailedFragment extends MvpAppCompatFragment {
          * Customize toolbar
          */
         detailedFragment = new DetailedFragment();
-
         toolbar = (Toolbar) view.findViewById(R.id.detailed_toolbar);
         toolbar.inflateMenu(R.menu.menu_detailed);
         setHasOptionsMenu(true);
@@ -133,7 +117,6 @@ public class DetailedFragment extends MvpAppCompatFragment {
          * Reviews Recycler
          */
         recyclerReviews = view.findViewById(R.id.reviewsRecyclerView);
-//        recyclerReviews.setLayoutManager(new GridLayoutManager(getActivity(), 2));
         recyclerReviews.setLayoutManager(new LinearLayoutManager(getActivity()));
         reviewList = new ArrayList<>();
         reviewAdapter = new ReviewsAdapter(reviewList);
@@ -170,7 +153,7 @@ public class DetailedFragment extends MvpAppCompatFragment {
         }
 
         /**
-         * Getting data for Revies and Trailers
+         * Getting data for Reviews and Trailers
          */
         getReviewsData();
         getTrailersData();
@@ -178,85 +161,37 @@ public class DetailedFragment extends MvpAppCompatFragment {
         return view;
     }
 
-    @Override
-    public void onSaveInstanceState(@NonNull Bundle outState) {
-        super.onSaveInstanceState(outState);
-        outState.putString(Contract.STATE_KEY, stateValue);
-    }
-
-    private void addMovieInFavourites() {
-        ContentValues contentValues = new ContentValues();
-        contentValues.put(Contract.TableInfo.COLUMN_ID, getArguments().getString("id"));
-        contentValues.put(Contract.TableInfo.COLUMN_TITLE, getArguments().getString("title"));
-        contentValues.put(Contract.TableInfo.COLUMN_POSTER_PATH, getArguments().getString("poster_path"));
-        contentValues.put(Contract.TableInfo.COLUMN_RELEASE_DATE, getArguments().getString("release_date"));
-        contentValues.put(Contract.TableInfo.COLUMN_RATING, getArguments().getString("vote_average"));
-        contentValues.put(Contract.TableInfo.COLUMN_OVERVIEW, getArguments().getString("overview"));
-        mDb.insert(Contract.TableInfo.TABLE_NAME, null, contentValues);
-        Log.d("tag", "CV include " + contentValues.toString());
-    }
-
+    /**
+     * Put movie in DB favourite
+     */
     private void addMovieInFavouritesByProvider() {
+        Log.d(Contract.TAG_WORK_PROCESS_CHECKING, "DetailedFragment - addMovieInFavouritesByProvider");
+
         ContentValues contentValues = new ContentValues();
         contentValues.put(Contract.TableInfo.COLUMN_ID, getArguments().getString("id"));
-        Log.d("tagCheck", "In table slot " + Contract.TableInfo.COLUMN_ID);
-        Log.d("tagCheck", "Put id is " + getArguments().getString("id"));
         contentValues.put(Contract.TableInfo.COLUMN_TITLE, getArguments().getString("title"));
         contentValues.put(Contract.TableInfo.COLUMN_POSTER_PATH, getArguments().getString("poster_path"));
-        Log.d("tagCheck", "In table slot " + Contract.TableInfo.COLUMN_POSTER_PATH);
-        Log.d("tagCheck", "Put id is " + getArguments().getString("poster_path"));
         contentValues.put(Contract.TableInfo.COLUMN_RELEASE_DATE, getArguments().getString("release_date"));
         contentValues.put(Contract.TableInfo.COLUMN_RATING, getArguments().getString("vote_average"));
         contentValues.put(Contract.TableInfo.COLUMN_OVERVIEW, getArguments().getString("overview"));
         Uri uri = getActivity().getContentResolver().insert(ProviderContract.TableEntry.CONTENT_URI, contentValues);
         if (uri != null) {
-            Log.d("tagURI", "URI IS --- " + uri.toString());
+            Log.d(Contract.TAG_WORK_PROCESS_CHECKING, "URI IS --- " + uri.toString());
         }
     }
 
-    private Cursor getAllGuests() {
-        return mDb.query(
-                Contract.TableInfo.TABLE_NAME,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null
-        );
-    }
-
-
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-//        menu.findItem(R.id.menu_popular).setVisible(false);
-//        menu.findItem(R.id.menu_sort).setVisible(false);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        Log.d("tag", "Menu is clicked");
-
-        //if (getArguments().getString("path") != null) {
-        path = getArguments().getString("path");
-        //}
-        Fragment fragment = new com.borisruzanov.popularmovies.ui.list.ListFragment().getInstance(path);
-        if (item.getItemId() == android.R.id.home) {
-            FragmentManager fm = getActivity().getSupportFragmentManager();
-            fm.popBackStack();
-            fm.beginTransaction().replace(R.id.main_frame_list, fragment).commit();
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
+    /**
+     * Getting data for reviews
+     */
     public void getReviewsData() {
-        Log.d("tagReview", "Current id is " + getArguments().getString("id"));
+        Log.d(Contract.TAG_WORK_PROCESS_CHECKING, "DetailedFragment - getReviewsData");
         RetrofitClient
                 .getApiService()
                 .loadReviews(getArguments().getString("id"), getString(R.string.api_key))
                 .enqueue(new Callback<ReviewModel>() {
                     @Override
                     public void onResponse(Call<ReviewModel> call, Response<ReviewModel> response) {
+                        Log.d(Contract.TAG_WORK_PROCESS_CHECKING, "DetailedFragment - getReviewsData - onResponse");
                         ReviewModel reviewModel = response.body();
                         Log.d("tagReview", "Current response " + String.valueOf(reviewModel.getPage()));
                         reviewList.addAll(reviewModel.getResults());
@@ -265,21 +200,26 @@ public class DetailedFragment extends MvpAppCompatFragment {
                             Log.d("tag", "Movie list111 " + result.getContent());
                         }
                     }
-
                     @Override
                     public void onFailure(Call<ReviewModel> call, Throwable t) {
-
+                        Log.d(Contract.TAG_WORK_PROCESS_CHECKING, "DetailedFragment - getReviewsData - onFailure");
                     }
                 });
     }
 
+    /**
+     * Getting data for trailers
+     */
     public void getTrailersData() {
+        Log.d(Contract.TAG_WORK_PROCESS_CHECKING, "DetailedFragment - getTrailersData");
         RetrofitClient.
                 getApiService()
                 .loadTrailers(getArguments().getString("id"), getString(R.string.api_key))
                 .enqueue(new Callback<TrailerModel>() {
                     @Override
                     public void onResponse(Call<TrailerModel> call, Response<TrailerModel> response) {
+                        Log.d(Contract.TAG_WORK_PROCESS_CHECKING, "DetailedFragment - getTrailersData - onResponse");
+
                         TrailerModel trailerModel = response.body();
                         if (trailerModel != null) {
                             trailerList.addAll(trailerModel.getResults());
@@ -290,15 +230,57 @@ public class DetailedFragment extends MvpAppCompatFragment {
 
                     @Override
                     public void onFailure(Call<TrailerModel> call, Throwable t) {
+                        Log.d(Contract.TAG_WORK_PROCESS_CHECKING, "DetailedFragment - getTrailersData - onFailure");
 
                     }
                 });
+    }
+
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        Log.d(Contract.TAG_WORK_PROCESS_CHECKING, "DetailedFragment - onSaveInstanceState");
+        outState.putString(Contract.STATE_KEY, stateValue);
+    }
+
+    private Fragment previousFragment(String path){
+        Fragment fragment = new Fragment();
+        switch (path) {
+            case "sort":
+                fragment = new com.borisruzanov.popularmovies.ui.list.ListFragment().getInstance("sort");
+                break;
+            case "favourite":
+                fragment = new FavouritesFragment().getInstance("favourite");
+                break;
+            case "popular":
+                fragment = new com.borisruzanov.popularmovies.ui.list.ListFragment().getInstance("popular");
+                break;
+        }
+        return fragment;
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        Log.d(Contract.TAG_WORK_PROCESS_CHECKING, "DetailedFragment - onCreateOptionsMenu");
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        Log.d(Contract.TAG_WORK_PROCESS_CHECKING, "DetailedFragment - onOptionsItemSelected");
+        path = getArguments().getString("path");
+        if (item.getItemId() == android.R.id.home) {
+            FragmentManager fm = getActivity().getSupportFragmentManager();
+            fm.popBackStack();
+            fm.beginTransaction().replace(R.id.main_frame_list, previousFragment(path)).commit();
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     private OnItemClickListener.OnItemClickCallback setOnItemClickCallback() {
         OnItemClickListener.OnItemClickCallback onItemClickCallback = new OnItemClickListener.OnItemClickCallback() {
             @Override
             public void onItemClicked(View view, int position) {
+                Log.d(Contract.TAG_WORK_PROCESS_CHECKING, "DetailedFragment - setOnItemClickCallback - onItemClicked");
                 String url = "https://www.youtube.com/watch?v=".concat(trailerList.get(position).getKey());
                 Intent i = new Intent(Intent.ACTION_VIEW);
                 i.setData(Uri.parse(url));

@@ -1,7 +1,9 @@
 package com.borisruzanov.popularmovies.dagger.modules;
 
 import android.content.Context;
+import android.util.Log;
 
+import com.borisruzanov.popularmovies.constants.Contract;
 import com.borisruzanov.popularmovies.dagger.scopes.AppScope;
 import com.borisruzanov.popularmovies.model.system.ResourceManager;
 
@@ -21,6 +23,8 @@ public class ResourceManagerModule {
     @AppScope
     @Provides
     public ResourceManager provideResourceManager(){
+        Log.d(Contract.TAG_WORK_PROCESS_CHECKING, "ResourceManagerModule - provideResourceManager");
+
         return new ResourceManager(context);
     }
 

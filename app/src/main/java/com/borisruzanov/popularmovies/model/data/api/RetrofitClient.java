@@ -2,6 +2,8 @@ package com.borisruzanov.popularmovies.model.data.api;
 
 import android.util.Log;
 
+import com.borisruzanov.popularmovies.constants.Contract;
+
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
@@ -15,7 +17,7 @@ public class RetrofitClient {
      * Retrofit instance
      **/
     private static Retrofit getRetrofitInstance(){
-        Log.d("tag", "Getting retrofit instance");
+        Log.d(Contract.TAG_WORK_PROCESS_CHECKING, "RetrofitClient - getRetrofitInstance");
 
         return new Retrofit.Builder()
                 .baseUrl(BASE_URL)
@@ -27,7 +29,7 @@ public class RetrofitClient {
      * Api Service
      **/
     public static ApiService getApiService(){
-        Log.d("tag", "Getting ApiService Instance");
+        Log.d(Contract.TAG_WORK_PROCESS_CHECKING, "RetrofitClient - getApiService");
         return getRetrofitInstance().create(ApiService.class);
     }
 }

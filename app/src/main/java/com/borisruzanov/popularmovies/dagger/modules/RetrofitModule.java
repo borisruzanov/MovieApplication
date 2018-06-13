@@ -1,5 +1,8 @@
 package com.borisruzanov.popularmovies.dagger.modules;
 
+import android.util.Log;
+
+import com.borisruzanov.popularmovies.constants.Contract;
 import com.borisruzanov.popularmovies.dagger.scopes.AppScope;
 import com.borisruzanov.popularmovies.model.data.api.ApiService;
 import com.borisruzanov.popularmovies.model.data.api.RetrofitClient;
@@ -18,6 +21,8 @@ public class RetrofitModule {
     @AppScope
     @Provides
     public ApiService provideApiService(){
+        Log.d(Contract.TAG_WORK_PROCESS_CHECKING, "RetrofitModule - provideApiService");
+
         return new Retrofit.Builder()
                 .baseUrl(BASE_URL)
                 .addConverterFactory(GsonConverterFactory.create())

@@ -94,12 +94,6 @@
                             android:text="Vote average"
                             android:textSize="@dimen/abc_text_size_large_material" />
 
-                        <Button
-                            android:id="@+id/fr_detailed_btn_favourite"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Favourite"
-                            />
 
                         <Button
                             android:id="@+id/fr_detailed_btn_provider"

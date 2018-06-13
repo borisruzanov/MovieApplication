@@ -3,6 +3,7 @@ package com.borisruzanov.popularmovies.constants;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 
 public class FavouritesDbHelper extends SQLiteOpenHelper {
 
@@ -15,6 +16,8 @@ public class FavouritesDbHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
+        Log.d(Contract.TAG_WORK_PROCESS_CHECKING, "FavouritesDbHelper - onCreate");
+
         final String SQL_CREATE_FAVOURITES_TABLE = "CREATE TABLE " +
 
                         Contract.TableInfo.TABLE_NAME + " (" +

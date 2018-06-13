@@ -40,6 +40,10 @@ import java.util.List;
  * A simple {@link Fragment} subclass.
  */
 public class FavouritesFragment extends MvpAppCompatFragment implements FavouritesAdapter.ItemClickListener {
+
+    /**
+     * General
+     */
     View view;
     Toolbar toolbar;
 
@@ -48,11 +52,6 @@ public class FavouritesFragment extends MvpAppCompatFragment implements Favourit
     FavouritesAdapter favouritesAdapter;
     ListFragment listFragment;
 
-    /**
-     * TEST
-     */
-    public static final String IMAGE_ID_LIST = "image_ids";
-    public static final String LIST_INDEX = "list_index";
     String id ;
     String posterPath;
     String title;
@@ -66,12 +65,16 @@ public class FavouritesFragment extends MvpAppCompatFragment implements Favourit
     FavouritesDbHelper favouritesDbHelper;
     Cursor cursor;
 
-    private String stateValue = "favourite";
-
     public FavouritesFragment() {
         // Required empty public constructor
     }
 
+    /**
+     * Helping with showing needed list depends on got parameter
+     * @param path - sort / popular / favourite
+     * @return - chosen fragment with chosen path
+     */
+    //TODO Вынести в общий метод
     public FavouritesFragment getInstance(String path) {
         FavouritesFragment fragment = new FavouritesFragment();
         Bundle args = new Bundle();
@@ -84,24 +87,26 @@ public class FavouritesFragment extends MvpAppCompatFragment implements Favourit
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        Log.d(Contract.TAG_WORK_PROCESS_CHECKING, "FavouritesFragment - onCreateView");
+
         view = inflater.inflate(R.layout.fragment_favourites, container, false);
         toolbar = (Toolbar) view.findViewById(R.id.main_favourite_toolbar);
         ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
         toolbar.inflateMenu(R.menu.menu_main);
         setHasOptionsMenu(true);
-
         listFragment = new ListFragment();
+        favouritesList = new ArrayList<>();
+
 
         /**
          * DB
          */
         favouritesDbHelper = new FavouritesDbHelper(getActivity());
-
-
         cursor = getDataForListFromContentProvider();
-        favouritesList = new ArrayList<>();
 
         if(savedInstanceState != null) {
+            Log.d(Contract.TAG_WORK_PROCESS_CHECKING, "FavouritesFragment - savedInstanceState != null");
+
             id = savedInstanceState.getString("id");
             Log.d("TAG_FRAGMENT", "mID - " + id);
 
@@ -147,25 +152,6 @@ public class FavouritesFragment extends MvpAppCompatFragment implements Favourit
         }
         cursor.close();
 
-//        for (FavouriteModel result : favouritesList) {
-//            Log.d("TAG", "Title from moviesList " + result.getTitle());
-//            Log.d("TAG", "Id from moviesList " + result.getId());
-//        }
-
-
-//        String[] projection = new String[]{
-//                Contract.TableInfo.COLUMN_ID,
-//                Contract.TableInfo.COLUMN_TITLE,
-//                Contract.TableInfo.COLUMN_RELEASE_DATE,
-//                Contract.TableInfo.COLUMN_RATING,
-//                Contract.TableInfo.COLUMN_OVERVIEW,
-//                Contract.TableInfo.COLUMN_POSTER_PATH
-//        };
-
-        /**
-         * Первый этап - взяли данные
-         */
-
         favouritesAdapter = new FavouritesAdapter(favouritesList, setOnItemClickCallback());
         recyclerView = view.findViewById(R.id.recycler_favourites);
         recyclerView.setLayoutManager(new GridLayoutManager(getActivity(), 2));
@@ -173,14 +159,44 @@ public class FavouritesFragment extends MvpAppCompatFragment implements Favourit
         return view;
     }
 
+    /**
+     * DB
+     */
+    public Cursor getDataForListFromContentProvider() {
+        try {
+            return getContext().getContentResolver().query(ProviderContract.TableEntry.CONTENT_URI,
+                    null,
+                    null,
+                    null,
+                    null);
+        } catch (Exception e) {
+            Log.e("tag", "Failed while loading data");
+        }
+        return null;
+    }
+
+
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        Log.d(Contract.TAG_WORK_PROCESS_CHECKING, "FavouritesFragment - onSaveInstanceState");
+        outState.putString(Contract.STATE_KEY, "favourite");
+        outState.putString("id", id);
+        outState.putString("title", title);
+        outState.putString("release_date", releaseDate);
+        outState.putString("rating", vote);
+        outState.putString("overview", overview);
+        Log.d(Contract.TAG_STATE_CHECKING, "Bundle is " + outState.toString());
+    }
+
+
     private OnItemClickListener.OnItemClickCallback setOnItemClickCallback() {
         OnItemClickListener.OnItemClickCallback onItemClickCallback = new OnItemClickListener.OnItemClickCallback() {
             @Override
             public void onItemClicked(View view, int position) {
-
+                Log.d(Contract.TAG_WORK_PROCESS_CHECKING, "FavouritesFragment - setOnItemClickCallback - onItemClicked");
                 Bundle bundle = new Bundle();
                 bundle.putString("title", favouritesList.get(position).getTitle());
-
                 bundle.putString("overview", favouritesList.get(position).getOverview());
                 bundle.putString("release_date", favouritesList.get(position).getRelease_date());
                 bundle.putString("path", "favourite");
@@ -206,48 +222,19 @@ public class FavouritesFragment extends MvpAppCompatFragment implements Favourit
     }
 
 
-
-    /**
-     * DB
-     */
-
-    public Cursor getDataForListFromContentProvider() {
-        Log.v("tag", "===============>>>>>>>> inside getDataForListFromContentProvider");
-        try {
-            return getContext().getContentResolver().query(ProviderContract.TableEntry.CONTENT_URI,
-                    null,
-                    null,
-                    null,
-                    null);
-        } catch (Exception e) {
-            Log.e("tag", "Failed while loading data");
-        }
-        return null;
-    }
-
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        Log.d(Contract.TAG_WORK_PROCESS_CHECKING, "FavouritesFragment - onCreateOptionsMenu");
+
         super.onCreateOptionsMenu(menu, inflater);
         super.onCreateOptionsMenu(menu, inflater);
         toolbar.inflateMenu(R.menu.menu_main);
     }
 
-    @Override
-    public void onSaveInstanceState(@NonNull Bundle outState) {
-        super.onSaveInstanceState(outState);
-        Log.d("tag", "INSIDE SAVED INSTANCE");
-
-        outState.putString(Contract.STATE_KEY, "favourite");
-        outState.putString("id", id);
-        outState.putString("title", title);
-        outState.putString("release_date", releaseDate);
-        outState.putString("rating", vote);
-        outState.putString("overview", overview);
-        Log.d("tag", "Bundle is " +outState.toString());
-    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        Log.d(Contract.TAG_WORK_PROCESS_CHECKING, "FavouritesFragment - onOptionsItemSelected");
         FragmentManager manager = getActivity().getSupportFragmentManager();
         FragmentTransaction transaction = manager.beginTransaction();
         switch (item.getItemId()) {
@@ -261,32 +248,9 @@ public class FavouritesFragment extends MvpAppCompatFragment implements Favourit
                 transaction.addToBackStack(null);
                 transaction.commit();
                 break;
-
         }
         return super.onOptionsItemSelected(item);
     }
 
 
 }
-
-//       if (cursor.moveToFirst()){
-//           int idIndex = cursor.getColumnIndex(Contract.TableInfo.COLUMN_ID);
-//           int idTitle = cursor.getColumnIndex(Contract.TableInfo.COLUMN_TITLE);
-//           int idPath = cursor.getColumnIndex(Contract.TableInfo.COLUMN_POSTER_PATH);
-//           Log.d("tag", "---> ID = " + cursor.getString(idIndex) +
-//           " ---> Title = " + cursor.getString(idTitle) +
-//           " ---> Path = " + cursor.getString(idPath));
-//       } else {
-//           Log.d("tag", "---Cursor got 0 rows---");
-//       }
-
-
-//                    bundle.putString("overview", itemClicked.getOverview());
-//                    bundle.putString("release_date", itemClicked.getRelease_date());
-//                    bundle.putString("vote_average", itemClicked.getVote_average().toString());
-//                    bundle.putString("poster_path", itemClicked.getPoster_path());
-//                    bundle.putString("id", itemClicked.getId().toString());
-
-
-//                    FavouriteModel itemClicked = favouritesList.get(cursor.moveToPosition(position));
-//                    Log.d("click", "Fav -  FavouriteModel itemClicked " + itemClicked.toString());

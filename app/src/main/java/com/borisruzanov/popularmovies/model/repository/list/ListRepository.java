@@ -3,6 +3,7 @@ package com.borisruzanov.popularmovies.model.repository.list;
 import android.util.Log;
 
 import com.borisruzanov.popularmovies.R;
+import com.borisruzanov.popularmovies.constants.Contract;
 import com.borisruzanov.popularmovies.entity.BasePojo;
 import com.borisruzanov.popularmovies.model.data.api.ApiService;
 import com.borisruzanov.popularmovies.model.system.ResourceManager;
@@ -30,16 +31,21 @@ public class ListRepository {
      * @param listCallback
      */
     public void sortByPopularity(ListCallback listCallback) {
-       apiService.getPopularList(resourceManager.getString(R.string.api_key)).enqueue(new Callback<BasePojo>() {
+        Log.d(Contract.TAG_WORK_PROCESS_CHECKING, "ListRepository - sortByPopularity");
+
+        apiService.getPopularList(resourceManager.getString(R.string.api_key)).enqueue(new Callback<BasePojo>() {
             @Override
             public void onResponse(Call<BasePojo> call, Response<BasePojo> response) {
                 /*BasePojo basePojo = response.body();
                 listCallback.setPhotosList(basePojo.getResults());*/
+                Log.d(Contract.TAG_WORK_PROCESS_CHECKING, "ListRepository - sortByPopularity - onResponse");
+
                 fetchList(listCallback, response.body().getResults());
             }
 
             @Override
             public void onFailure(Call<BasePojo> call, Throwable t) {
+                Log.d(Contract.TAG_WORK_PROCESS_CHECKING, "ListRepository - sortByPopularity - onFailure");
                 Log.d("tag", "Response failed" + t.toString());
 
             }
@@ -47,16 +53,22 @@ public class ListRepository {
     }
 
     public void sortByRating(ListCallback listCallback) {
+        Log.d(Contract.TAG_WORK_PROCESS_CHECKING, "ListRepository - sortByRating");
+
         apiService.getPhotosList(resourceManager.getString(R.string.api_key)).enqueue(new Callback<BasePojo>() {
             @Override
             public void onResponse(Call<BasePojo> call, Response<BasePojo> response) {
                 /*BasePojo basePojo = response.body();
                 listCallback.setPhotosList(basePojo.getResults());*/
+                Log.d(Contract.TAG_WORK_PROCESS_CHECKING, "ListRepository - sortByRating - onResponse");
+
                 fetchList(listCallback, response.body().getResults());
             }
 
             @Override
             public void onFailure(Call<BasePojo> call, Throwable t) {
+                Log.d(Contract.TAG_WORK_PROCESS_CHECKING, "ListRepository - sortByRating - onFailure");
+
                 Log.d("tag", "Response failed" + t.toString());
 
             }
@@ -64,6 +76,8 @@ public class ListRepository {
     }
 
     private void fetchList(ListCallback listCallback, List<BasePojo.Result> photosList){
+        Log.d(Contract.TAG_WORK_PROCESS_CHECKING, "ListRepository - fetchList");
+
         listCallback.setPhotosList(photosList);
     }
 
