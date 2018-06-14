@@ -21,7 +21,6 @@ import android.view.ViewGroup;
 
 import com.arellomobile.mvp.MvpAppCompatFragment;
 import com.arellomobile.mvp.presenter.InjectPresenter;
-import com.borisruzanov.popularmovies.MovieApplication;
 import com.borisruzanov.popularmovies.OnItemClickListener;
 import com.borisruzanov.popularmovies.R;
 import com.borisruzanov.popularmovies.constants.Contract;
@@ -95,7 +94,7 @@ public class ListFragment extends MvpAppCompatFragment implements ListAdapter.It
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        Log.d(Contract.TAG_STATE_CHECKING, "ListFragment - onActivityCreated");
+        Log.d(Contract.TAG_STATES_CHECKING, "ListFragment - onActivityCreated");
         openSelectedSection(savedInstanceState);
     }
 
@@ -105,10 +104,10 @@ public class ListFragment extends MvpAppCompatFragment implements ListAdapter.It
      */
     @Override
     public void openSelectedSection(Bundle savedInstanceState){
-        Log.d(Contract.TAG_STATE_CHECKING, "ListFragment - openSelectedSection");
+        Log.d(Contract.TAG_STATES_CHECKING, "ListFragment - openSelectedSection");
         if(savedInstanceState != null){
-            Log.d(Contract.TAG_STATE_CHECKING, "ListFragment - not null");
-            Log.d(Contract.TAG_STATE_CHECKING, "Saved instance state is: " +
+            Log.d(Contract.TAG_STATES_CHECKING, "ListFragment - not null");
+            Log.d(Contract.TAG_STATES_CHECKING, "Saved instance state is: " +
                     savedInstanceState.getString(Contract.STATE_KEY));
             path = savedInstanceState.getString(Contract.STATE_KEY);
         }
@@ -126,15 +125,15 @@ public class ListFragment extends MvpAppCompatFragment implements ListAdapter.It
     public void checkForPath(String path) {
         switch (path) {
             case "sort":
-                Log.d(Contract.TAG_STATE_CHECKING, "ListFragment - checkForPath -  case sort");
+                Log.d(Contract.TAG_STATES_CHECKING, "ListFragment - checkForPath -  case sort");
                 listPresenter.sortByPopularity();
                 break;
             case "favourite":
-                Log.d(Contract.TAG_STATE_CHECKING, "ListFragment - checkForPath -  case favourite");
+                Log.d(Contract.TAG_STATES_CHECKING, "ListFragment - checkForPath -  case favourite");
                 openFavouriteFragment();
                 break;
             case "popular":
-                Log.d(Contract.TAG_STATE_CHECKING, "ListFragment - checkForPath -  case popular");
+                Log.d(Contract.TAG_STATES_CHECKING, "ListFragment - checkForPath -  case popular");
                 listPresenter.sortByRating();
                 break;
         }
@@ -145,7 +144,7 @@ public class ListFragment extends MvpAppCompatFragment implements ListAdapter.It
      */
     @Override
     public void openFavouriteFragment(){
-        Log.d(Contract.TAG_STATE_CHECKING, "ListFragment - openFavouriteFragment");
+        Log.d(Contract.TAG_STATES_CHECKING, "ListFragment - openFavouriteFragment");
 
         FragmentManager manager = getActivity().getSupportFragmentManager();
         FragmentTransaction transaction = manager.beginTransaction();
@@ -206,7 +205,7 @@ public class ListFragment extends MvpAppCompatFragment implements ListAdapter.It
     @Override
     public void onAttachFragment(Fragment childFragment) {
         super.onAttachFragment(childFragment);
-        Log.d(Contract.TAG_STATE_CHECKING, "ListFragment - onAttachFragment");
+        Log.d(Contract.TAG_STATES_CHECKING, "ListFragment - onAttachFragment");
     }
 
     @Override
@@ -219,17 +218,17 @@ public class ListFragment extends MvpAppCompatFragment implements ListAdapter.It
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_sort:
-                Log.d(Contract.TAG_STATE_CHECKING, "ListFragment - onOptionsItemSelected - case R.id.menu_sort");
+                Log.d(Contract.TAG_STATES_CHECKING, "ListFragment - onOptionsItemSelected - case R.id.menu_sort");
                 listPresenter.sortByPopularity();
                 path = "sort";
                 break;
             case R.id.menu_popular:
-                Log.d(Contract.TAG_STATE_CHECKING, "ListFragment - onOptionsItemSelected - case R.id.menu_popular");
+                Log.d(Contract.TAG_STATES_CHECKING, "ListFragment - onOptionsItemSelected - case R.id.menu_popular");
                 listPresenter.sortByRating();
                 path = "popular";
                 break;
             case R.id.menu_favourite:
-                Log.d(Contract.TAG_STATE_CHECKING, "ListFragment - onOptionsItemSelected - case R.id.menu_favourite");
+                Log.d(Contract.TAG_STATES_CHECKING, "ListFragment - onOptionsItemSelected - case R.id.menu_favourite");
                 openFavouriteFragment();
         }
         return super.onOptionsItemSelected(item);

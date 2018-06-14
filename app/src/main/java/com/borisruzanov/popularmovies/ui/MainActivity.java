@@ -25,10 +25,10 @@ public class MainActivity extends MvpAppCompatActivity implements MainView {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Log.d(Contract.TAG_STATE_CHECKING, "MainActivity - OnCreate");
+        Log.d(Contract.TAG_STATES_CHECKING, "MainActivity - OnCreate");
         setContentView(R.layout.activity_main);
         if (savedInstanceState == null) {
-            Log.d(Contract.TAG_STATE_CHECKING, "savedInstanceState is null");
+            Log.d(Contract.TAG_STATES_CHECKING, "savedInstanceState is null");
             openFragment();
         }
     }
@@ -38,14 +38,14 @@ public class MainActivity extends MvpAppCompatActivity implements MainView {
      */
     @Override
     public void openFragment() {
-        Log.d(Contract.TAG_STATE_CHECKING, "MainActivity - openNeededFragment");
+        Log.d(Contract.TAG_STATES_CHECKING, "MainActivity - openNeededFragment");
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         openNeededFragment(new ListFragment().getInstance("sort"), fragmentTransaction);
     }
 
     private void openNeededFragment(Fragment fragment, FragmentTransaction transaction) {
-        Log.d(Contract.TAG_STATE_CHECKING, "MainActivity - openFragment2");
+        Log.d(Contract.TAG_STATES_CHECKING, "MainActivity - openFragment2");
         transaction.replace(R.id.main_frame_list, fragment);
         transaction.commit();
     }
@@ -54,8 +54,8 @@ public class MainActivity extends MvpAppCompatActivity implements MainView {
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        Log.d(Contract.TAG_STATE_CHECKING, "-------SCREEN ROTATED-------");
-        Log.d(Contract.TAG_STATE_CHECKING, "MainActivity - onSaveInstanceState");
+        Log.d(Contract.TAG_STATES_CHECKING, "-------SCREEN ROTATED-------");
+        Log.d(Contract.TAG_STATES_CHECKING, "MainActivity - onSaveInstanceState");
     }
 
 
@@ -65,7 +65,7 @@ public class MainActivity extends MvpAppCompatActivity implements MainView {
      */
     @Override
     public void onBackPressed() {
-        Log.d(Contract.TAG_STATE_CHECKING, "MainActivity - onBackPressed");
+        Log.d(Contract.TAG_STATES_CHECKING, "MainActivity - onBackPressed");
         FragmentManager fm = getSupportFragmentManager();
         //Checking for number of opened fragments
         if (fm.getBackStackEntryCount() > 0) {
@@ -84,7 +84,7 @@ public class MainActivity extends MvpAppCompatActivity implements MainView {
      * @param fragmentManager - we can use method to get all current open fragments in back stack
      */
     private void goToPreviousFragment(FragmentManager fragmentManager) {
-        Log.d(Contract.TAG_STATE_CHECKING, "MainActivity - goToPreviousFragment");
+        Log.d(Contract.TAG_STATES_CHECKING, "MainActivity - goToPreviousFragment");
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         for (Fragment fragment : fragmentManager.getFragments()) {
             if (fragment.getArguments().getString("path") != null) {

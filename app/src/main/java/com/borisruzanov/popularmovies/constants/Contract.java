@@ -5,7 +5,7 @@ import android.provider.BaseColumns;
 public class Contract {
     public static final String STATE_KEY = "stateDetailed";
     public static final String TAG_WORK_PROCESS_CHECKING = "checkingWorkProcess";
-    public static final String TAG_STATE_CHECKING = "checkingState";
+    public static final String TAG_STATES_CHECKING = "checkingState";
 
     private Contract() {
     }

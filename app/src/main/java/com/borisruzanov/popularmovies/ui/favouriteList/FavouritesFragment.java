@@ -2,7 +2,6 @@ package com.borisruzanov.popularmovies.ui.favouriteList;
 
 
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
@@ -24,7 +23,6 @@ import android.view.ViewGroup;
 import com.arellomobile.mvp.MvpAppCompatFragment;
 import com.borisruzanov.popularmovies.OnItemClickListener;
 import com.borisruzanov.popularmovies.R;
-import com.borisruzanov.popularmovies.entity.BasePojo;
 import com.borisruzanov.popularmovies.ui.detailed.DetailedFragment;
 import com.borisruzanov.popularmovies.constants.Contract;
 import com.borisruzanov.popularmovies.constants.FavouritesDbHelper;
@@ -33,7 +31,6 @@ import com.borisruzanov.popularmovies.udacity.ProviderContract;
 import com.borisruzanov.popularmovies.ui.list.ListFragment;
 
 import java.util.ArrayList;
-import java.util.List;
 
 
 /**
@@ -186,7 +183,7 @@ public class FavouritesFragment extends MvpAppCompatFragment implements Favourit
         outState.putString("release_date", releaseDate);
         outState.putString("rating", vote);
         outState.putString("overview", overview);
-        Log.d(Contract.TAG_STATE_CHECKING, "Bundle is " + outState.toString());
+        Log.d(Contract.TAG_STATES_CHECKING, "Bundle is " + outState.toString());
     }
 
 
