@@ -108,8 +108,8 @@ public class ListFragment extends MvpAppCompatFragment implements ListAdapter.It
         if(savedInstanceState != null){
             Log.d(Contract.TAG_STATES_CHECKING, "ListFragment - not null");
             Log.d(Contract.TAG_STATES_CHECKING, "Saved instance state is: " +
-                    savedInstanceState.getString(Contract.STATE_KEY));
-            path = savedInstanceState.getString(Contract.STATE_KEY);
+                    savedInstanceState.getString(Contract.STATE_KEYS));
+            path = savedInstanceState.getString(Contract.STATE_KEYS);
         }
         else if(getArguments() != null){
             path = getArguments().getString("path");
@@ -238,7 +238,7 @@ public class ListFragment extends MvpAppCompatFragment implements ListAdapter.It
     public void onSaveInstanceState(@NonNull Bundle outState) {
         Log.d(Contract.TAG_WORK_PROCESS_CHECKING, "ListFragment - onSaveInstanceState");
         super.onSaveInstanceState(outState);
-        outState.putString(Contract.STATE_KEY, path);
+        outState.putString(Contract.STATE_KEYS, path);
     }
 
 

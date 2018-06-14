@@ -3,14 +3,12 @@ package com.borisruzanov.popularmovies.ui.detailed;
 
 import android.content.ContentValues;
 import android.content.Intent;
-import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.ListFragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -148,7 +146,7 @@ public class DetailedFragment extends MvpAppCompatFragment {
                 .into(imgPoster);
 
         if (savedInstanceState != null) {
-            stateValue = String.valueOf(savedInstanceState.getInt(Contract.STATE_KEY));
+            stateValue = String.valueOf(savedInstanceState.getInt(Contract.STATE_KEYS));
             // Do something with value if needed
         }
 
@@ -240,7 +238,7 @@ public class DetailedFragment extends MvpAppCompatFragment {
     public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
         Log.d(Contract.TAG_WORK_PROCESS_CHECKING, "DetailedFragment - onSaveInstanceState");
-        outState.putString(Contract.STATE_KEY, stateValue);
+        outState.putString(Contract.STATE_KEYS, stateValue);
     }
 
     private Fragment previousFragment(String path){

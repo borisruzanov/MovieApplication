@@ -177,7 +177,7 @@ public class FavouritesFragment extends MvpAppCompatFragment implements Favourit
     public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
         Log.d(Contract.TAG_WORK_PROCESS_CHECKING, "FavouritesFragment - onSaveInstanceState");
-        outState.putString(Contract.STATE_KEY, "favourite");
+        outState.putString(Contract.STATE_KEYS, "favourite");
         outState.putString("id", id);
         outState.putString("title", title);
         outState.putString("release_date", releaseDate);
