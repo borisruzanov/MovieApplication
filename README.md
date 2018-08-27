@@ -2,8 +2,6 @@ Get popular movies via API and show to user. Popular Movies App created as a par
 
 ![alt text](http://images.vfl.ru/ii/1535399676/4e536804/23081949.jpg)
 
-Dagger2-Retrofit-RxJava2 / REST API / Content Provider / Moxy ● Implemented feature of added to favourite and sharing 
-
 ## Used Libraries
 Dependency Injections:
 * [Dagger 2](https://github.com/google/dagger)
